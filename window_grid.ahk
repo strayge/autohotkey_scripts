@@ -1,4 +1,4 @@
-﻿; Original version written by Leo Xiong: https://github.com/leoxiong/windowgrid
+; Original version written by Leo Xiong: https://github.com/leoxiong/windowgrid
 ; Minor fixes for compatibility with Win10 by strayge
 
 ; #SingleInstance, Force

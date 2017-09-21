@@ -1,4 +1,4 @@
-﻿#SingleInstance, Force
+#SingleInstance, Force
 ;#NoTrayIcon
 #NoEnv
 SetBatchLines, -1

@@ -1,4 +1,4 @@
-﻿; Put your hotcorner actions here
+; Put your hotcorner actions here
 Action_TopLeft() {
     Send, {LWin down}{Tab down}
     Send, {Lwin up}{Tab up}
