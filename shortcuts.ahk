@@ -171,7 +171,7 @@ return
 ;          Notepad++ and HxD editors for selected file in Explorer
 ; =========================================================================
 ; explorer: win+e - open current file with Notepad++
-#If, EXPLORER_CUSTOM_EDITORS or WinActive("ahk_class CabinetWClass") or WinActive("ahk_class WorkerW")
+#If, EXPLORER_CUSTOM_EDITORS and (WinActive("ahk_class CabinetWClass") or WinActive("ahk_class WorkerW"))
 f3::
     ClipboardSaved := ClipboardAll  ; save
     clipboard = 
