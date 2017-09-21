@@ -128,11 +128,11 @@ return
 ; =========================================================================
 #If SLEEP_AND_HIBERNATE
 ; hibernate win+q
-#sc010::DllCall("PowrProf\SetSuspendState", "int", 1, "int", 1, "int", 1)
+#sc010 UP::DllCall("PowrProf\SetSuspendState", "int", 1, "int", 1, "int", 1)
 return
 
 ; sleep win+s
-#sc01F::
+#sc01F UP::
 ChangeActiveLayoutToEng()
 Send #{vk58sc02D} ; win+x
 Send {vk55sc016} ; u
@@ -211,7 +211,7 @@ f4::
 ; explorer: win+c: cmd in current folder
 ; #IfWinActive, ahk_class CabinetWClass
 ; win+c
-#sc02E::
+#sc02E UP::
 ;ClipSaved := ClipboardAll
 WinGetText, full_path, A
 StringSplit, word_array, full_path, `n
@@ -244,7 +244,7 @@ return
 ; explorer: win+shift+c: cmd in current folder as admin
 ; #IfWinActive, ahk_class CabinetWClass
 ; win+shift+c
-#+sc02E::
+#+sc02E UP::
     ;ClipSaved := ClipboardAll
     WinGetText, full_path, A
     StringSplit, word_array, full_path, `n
