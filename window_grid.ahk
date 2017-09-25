@@ -48,8 +48,21 @@ Hotkey, ^Down, key, On
 
 x := 0
 y := 0
-w := screenWidth / 2
-h := screenHeight / 2
+if screenWidth / screenHeight > 3
+{
+    w := screenWidth / 4
+    h := screenHeight / 2
+} 
+else if screenWidth / screenHeight < 1.2
+{
+    w := screenWidth / 2
+    h := screenHeight / 4
+}
+else
+{
+    w := screenWidth / 2
+    h := screenHeight / 2
+}
 
 Gui, Show, NoActivate
 
