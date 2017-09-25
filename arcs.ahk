@@ -58,6 +58,7 @@ IniRead, colorActive,   arcs_options.ini, %scheme%, 1, 0xFFEEEEEE
 IniRead, colorActive2,  arcs_options.ini, %scheme%, 2, 0xFFAAAAAA
 IniRead, colorActive3,  arcs_options.ini, %scheme%, 3, 0x37FFFFFF
 IniRead, colorInactive, arcs_options.ini, %scheme%, 4, 0x30999999
+IniRead, colorTemp,     arcs_options.ini, %scheme%, 5, 0xCCFF0000
 IniRead, colorHands,    arcs_options.ini, %scheme%, 6, 0xFFDDFFDD
 IniRead, colorHandSecs, arcs_options.ini, %scheme%, 7, 0xFF80C0FF
 
@@ -85,12 +86,13 @@ SetTimer, redraw, %interval%
 redraw:
 Gdip_GraphicsClear(pGraphics)
 
-; ================== backgroubd =============================
+; ================== background =============================
 ; DrawArc(0x20777777, 94, 47, 0, 360)
 
 ; =================== center ================================
 ring0size := 45
 ring0width := 66
+
 ; Disk (the script is executed from) space usage arc
 DriveSpaceFree, driveSpaceFree, %drive%
 DriveGet, capacity, Capacity, % drive := SubStr(A_ScriptDir, 1, 3)
@@ -100,32 +102,49 @@ DrawArc(colorActive3, ring0width, ring0size, -90, usedSpace * 360)
 ; ===========================================================
 ring1size := 92
 ring1width := 10
-;Default arcs for volume
+; Default arcs
 DrawArc(colorInactive, ring1width, ring1size, 92, 176)
+DrawArc(colorInactive, ring1width, ring1size, 88, -176)
 
-;Arcs for volume
+; Volume
 SoundGet, volume
 DrawArc(colorActive2, ring1width, ring1size, 92, volume * 176 / 100)
 
-;Default arcs for brightness
-DrawArc(colorInactive, ring1width, ring1size, 88, -176)
-
-;Arcs for brightness
+; Brightness
 brightness := MoveBrightness(0)
 DrawArc(colorActive2, ring1width, ring1size, 88, -brightness * 176 / 100)
 
 ;==========================================================
-ring2size := 115
+ring12size := 108
+ring12width := 8
+; Default arcs
+DrawArc(colorInactive, ring12width, ring12size, 91, 178)
+; DrawArc(colorInactive, ring12width, ring12size, 89, -178)
+
+; CPU temperature
+cpuTemp := Max(GetCPUTemp(), 30) - 30
+DrawArc(colorTemp, ring12width, ring12size, 91, cpuTemp * 178 / 70)
+
+; GPU temperature
+; gpuTemp := GetGPUTemp()
+; DrawArc(colorTemp, ring12width, ring12size, 91, -gpuTemp * 178 / 100)
+
+;==========================================================
+ring2size := 125
 ring2width := 15
-;Default arcs for CPU and RAM
+; Default arcs
 DrawArc(colorInactive, ring2width, ring2size, 91, 178)
 DrawArc(colorInactive, ring2width, ring2size, 89, -178)
 
-;Arcs for CPU and RAM
+; RAM
 DllCall("kernel32\GlobalMemoryStatus", "UInt", &lpBuffer)
 memory := *(&lpBuffer + 4)
 DrawArc(colorActive, ring2width, ring2size, 89, -memory * 178 / 100)
+; GPU
+; gpuLoad = GetGPULoad()
+; DrawArc(colorActive, ring2width, ring2size, 89, -gpuLoad * 178 / 100)
 
+; CPU
 DllCall("GetSystemTimes", "UInt64P", lpIdleTime, "UInt64P", lpKernelTime, "UInt64P", lpUserTime)
 usr := lpUserTime - lpUserTime2, ker := lpKernelTime - lpKernelTime2, idl := lpIdleTime - lpIdleTime2
 lpUserTime2 := lpUserTime, lpKernelTime2 := lpKernelTime, lpIdleTime2 := lpIdleTime
@@ -136,7 +155,7 @@ ring3size := 180
 ring3width := 66
 ring3sizeInner := 149
 ring3widthInner := 4
-;Arcs for battery
+; Battery
 DllCall("Kernel32\GetSystemPowerStatus", "UInt", &lpSystemPowerStatus)
 DrawArc(colorActive3, ring3width, ring3size, -90, b:=((t := *(&lpSystemPowerStatus + 2)) = 255 ? 0 : t) * 360 / 100)
 
@@ -269,7 +288,7 @@ Gdip_Shutdown(pToken)
 ExitApp
 
 #Include Gdip.ahk
-
+#include hwmonitor.ahk
 
 MoveBrightness(IndexMove)
 {
@@ -377,4 +396,16 @@ MoveBrightness(IndexMove)
     
     }
 
+}
+
+Min(x,x1="",x2="",x3="",x4="",x5="",x6="",x7="",x8="",x9="") {
+   Loop
+      IfEqual x%A_Index%,, Return x
+      Else x := x < x%A_Index% ? x : x%A_Index%
+}
+
+Max(x,x1="",x2="",x3="",x4="",x5="",x6="",x7="",x8="",x9="") {
+   Loop
+      IfEqual x%A_Index%,, Return x
+      Else x := x > x%A_Index% ? x : x%A_Index%
 }
