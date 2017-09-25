@@ -4,6 +4,7 @@
 #SingleInstance, Force
 #Persistent
 #MaxHotkeysPerInterval 200
+SetTitleMatchMode, 2
 SetWorkingDir %A_ScriptDir%
 ; hints: # - win, ! - alt, ^ - ctrl, + - shift
 
@@ -143,7 +144,7 @@ return
 ; =========================================================================
 ;              Touchpad, 3-fingers shortcuts with app-context
 ; =========================================================================
-#If TOUCHPAD_3FINGERS_CUSTOM and WinActive("ahk_class MozillaWindowClass")
+#If TOUCHPAD_3FINGERS_CUSTOM and (WinActive("ahk_class MozillaWindowClass") or WinActive("- Microsoft Edge"))
 ; needed custom settings for touchpad
 ; #IfWinActive, ahk_class MozillaWindowClass
 vk7d::  ; f14
